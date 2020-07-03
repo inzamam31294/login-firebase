@@ -1,27 +1,33 @@
 import React from 'react';
-import { useHistory } from 'react-router-dom'
+import { Redirect } from 'react-router-dom'
 import { myFirebase } from "../plugins/firebaseConfig";
 
 class Login extends React.Component {
 
   state = {
     email: '',
-    password: ''
+    password: '',
+    redirect: null
   }
 
   onChange = (e) => this.setState({ [e.target.name]: e.target.value })
 
   Login = (e) => {
     e.preventDefault()
-    const router = useHistory()
     if(this.state.email !== '' && this.state.password !== ''){
       myFirebase.auth().signInWithEmailAndPassword(this.state.email, this.state.password)
-      router.push("/profile")
+      this.setState({redirect: '/profile'})
+      alert('your are logged in!')
     }
   }
   
 
   render(){
+
+    if(this.state.redirect){
+      return <Redirect to={this.state.redirect} />
+    }
+
     return (
       <div className="cont flex flex-col items-center">
         <h1 className="uppercase text-center text-5xl">login</h1>
